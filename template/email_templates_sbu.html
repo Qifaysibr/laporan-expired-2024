@@ -1,0 +1,237 @@
+
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: var(--font-sans); }
+  .tabs { display: flex; gap: 8px; margin-bottom: 1.5rem; flex-wrap: wrap; }
+  .tab { padding: 8px 18px; border-radius: var(--border-radius-md); border: 0.5px solid var(--color-border-secondary); background: var(--color-background-secondary); font-size: 14px; cursor: pointer; color: var(--color-text-secondary); transition: all 0.15s; }
+  .tab:hover { background: var(--color-background-primary); }
+  .tab.active-green { background: #EAF3DE; color: #3B6D11; border-color: #639922; font-weight: 500; }
+  .tab.active-amber { background: #FAEEDA; color: #854F0B; border-color: #BA7517; font-weight: 500; }
+  .tab.active-red { background: #FCEBEB; color: #A32D2D; border-color: #E24B4A; font-weight: 500; }
+  .panel { display: none; }
+  .panel.active { display: block; }
+  .email-wrap { background: var(--color-background-primary); border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-lg); overflow: hidden; max-width: 620px; }
+  .email-meta { background: var(--color-background-secondary); padding: 12px 20px; font-size: 13px; color: var(--color-text-secondary); border-bottom: 0.5px solid var(--color-border-tertiary); }
+  .email-meta strong { color: var(--color-text-primary); }
+  .email-header { padding: 28px 28px 0; }
+  .badge { display: inline-block; padding: 4px 12px; border-radius: var(--border-radius-md); font-size: 12px; font-weight: 500; margin-bottom: 16px; }
+  .badge-green { background: #EAF3DE; color: #3B6D11; }
+  .badge-amber { background: #FAEEDA; color: #854F0B; }
+  .badge-red { background: #FCEBEB; color: #A32D2D; }
+  .email-body { padding: 16px 28px 28px; font-size: 14px; line-height: 1.75; color: var(--color-text-primary); }
+  .email-body p { margin-bottom: 12px; }
+  .info-card { border-radius: var(--border-radius-md); padding: 14px 18px; margin: 18px 0; border-left: 3px solid; }
+  .info-card-green { background: #EAF3DE; border-left-color: #639922; }
+  .info-card-amber { background: #FAEEDA; border-left-color: #BA7517; }
+  .info-card-red { background: #FCEBEB; border-left-color: #E24B4A; }
+  .info-card-blue { background: #E6F1FB; border-left-color: #378ADD; }
+  .info-card .label { font-size: 11px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 6px; }
+  .info-card-green .label { color: #3B6D11; }
+  .info-card-amber .label { color: #854F0B; }
+  .info-card-red .label { color: #A32D2D; }
+  .info-card-blue .label { color: #185FA5; }
+  .data-row { display: flex; justify-content: space-between; font-size: 13px; padding: 3px 0; border-bottom: 0.5px solid rgba(0,0,0,0.06); }
+  .data-row:last-child { border-bottom: none; }
+  .data-row .key { color: var(--color-text-secondary); }
+  .data-row .val { font-weight: 500; }
+  .val-green { color: #3B6D11; }
+  .val-amber { color: #854F0B; }
+  .val-red { color: #A32D2D; }
+  .services { margin: 18px 0; }
+  .services .title { font-size: 13px; font-weight: 500; color: var(--color-text-secondary); margin-bottom: 10px; }
+  .service-item { display: flex; align-items: flex-start; gap: 8px; font-size: 13px; padding: 4px 0; color: var(--color-text-primary); }
+  .service-item i { font-size: 15px; margin-top: 1px; flex-shrink: 0; }
+  .si-green i { color: #3B6D11; }
+  .si-amber i { color: #854F0B; }
+  .si-red i { color: #A32D2D; }
+  .cta-btn { display: inline-block; padding: 12px 24px; border-radius: var(--border-radius-md); font-size: 14px; font-weight: 500; text-decoration: none; margin-top: 10px; cursor: pointer; border: none; }
+  .cta-green { background: #3B6D11; color: #EAF3DE; }
+  .cta-amber { background: #854F0B; color: #FAEEDA; }
+  .cta-red { background: #A32D2D; color: #FCEBEB; }
+  .footer { font-size: 12px; color: var(--color-text-secondary); margin-top: 20px; padding-top: 16px; border-top: 0.5px solid var(--color-border-tertiary); line-height: 1.6; }
+  .copy-btn { padding: 5px 12px; border-radius: var(--border-radius-md); border: 0.5px solid var(--color-border-secondary); background: var(--color-background-secondary); font-size: 12px; cursor: pointer; color: var(--color-text-secondary); float: right; }
+  .copy-btn:hover { color: var(--color-text-primary); }
+  .section-label { font-size: 11px; color: var(--color-text-secondary); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 16px; }
+  .countdown { display: flex; align-items: center; gap: 8px; margin: 8px 0; }
+  .countdown-num { font-size: 28px; font-weight: 500; line-height: 1; }
+  .countdown-label { font-size: 12px; color: var(--color-text-secondary); }
+  .highlight { font-weight: 500; }
+  .note { font-size: 12px; color: var(--color-text-secondary); margin-top: 4px; }
+</style>
+
+<div class="tabs">
+  <button class="tab active-green" onclick="showPanel('green', this, 'green')"><i class="ti ti-calendar" aria-hidden="true"></i> 90 hari — Rencanakan</button>
+  <button class="tab" onclick="showPanel('amber', this, 'amber')"><i class="ti ti-clock" aria-hidden="true"></i> 60 hari — Persiapkan</button>
+  <button class="tab" onclick="showPanel('red', this, 'red')"><i class="ti ti-alert-triangle" aria-hidden="true"></i> 30 hari — Segera</button>
+</div>
+
+<div id="panel-green" class="panel active">
+  <p class="section-label">Template A — 90 hari sebelum expired</p>
+  <div class="email-wrap">
+    <div class="email-meta">
+      <div><strong>Kepada:</strong> admin@karyaabadibersaudara.co.id</div>
+      <div><strong>Subjek:</strong> [SBUJK] Masa Berlaku SBU PT. Karya Abadi Bersaudara Berakhir 90 Hari Lagi</div>
+    </div>
+    <div class="email-header">
+      <span class="badge badge-green"><i class="ti ti-info-circle" aria-hidden="true"></i> Informasi awal — 90 hari</span>
+    </div>
+    <div class="email-body">
+      <p>Yth. Tim Administrasi <span class="highlight">PT. Karya Abadi Bersaudara</span>,</p>
+      <p>Perkenalkan, saya <strong>Ibrahim</strong> dari <strong>PT. Esdea Assistance Management</strong>. Kami menyampaikan informasi penting terkait sertifikasi perusahaan Bapak/Ibu.</p>
+
+      <div class="info-card info-card-green">
+        <div class="label">Data SBU perusahaan</div>
+        <div class="data-row"><span class="key">Nama perusahaan</span><span class="val">PT. Karya Abadi Bersaudara</span></div>
+        <div class="data-row"><span class="key">Subklasifikasi</span><span class="val">[Kode Subklasifikasi] — [Nama Subklasifikasi]</span></div>
+        <div class="data-row"><span class="key">Kualifikasi</span><span class="val">[Kualifikasi]</span></div>
+        <div class="data-row"><span class="key">Tanggal berakhir</span><span class="val val-amber">[Tanggal Expired]</span></div>
+        <div class="data-row"><span class="key">Sisa masa berlaku</span><span class="val val-green">~90 hari</span></div>
+      </div>
+
+      <p>Dengan sisa waktu <strong>90 hari</strong>, ini adalah waktu yang ideal untuk memulai proses perpanjangan tanpa terburu-buru. Proses yang disiapkan lebih awal umumnya lebih lancar dan menghindari risiko penolakan tender akibat SBU yang kedaluwarsa.</p>
+
+      <div class="services si-green">
+        <div class="title">Layanan yang dapat kami bantu dalam satu paket:</div>
+        <div class="service-item"><i class="ti ti-certificate" aria-hidden="true"></i><span><strong>Perpanjangan SBUJK</strong> — termasuk upgrade klasifikasi dan reaktivasi jika diperlukan</span></div>
+        <div class="service-item"><i class="ti ti-file-invoice" aria-hidden="true"></i><span><strong>Laporan Audit Independen (LAI)</strong> — prasyarat perpanjangan SBU, kami bantu dari awal</span></div>
+        <div class="service-item"><i class="ti ti-users" aria-hidden="true"></i><span><strong>SKK Konstruksi</strong> — validasi tenaga ahli dan administrasi LPJK</span></div>
+        <div class="service-item"><i class="ti ti-shield-check" aria-hidden="true"></i><span><strong>Sertifikasi ISO & K3</strong> — dapat diproses bersamaan untuk efisiensi waktu</span></div>
+      </div>
+
+      <div class="info-card info-card-blue">
+        <div class="label">Mengapa mulai dari sekarang?</div>
+        <p style="font-size:13px; color: var(--color-text-primary); margin-bottom:6px;">Perpanjangan SBU membutuhkan <strong>Laporan Audit Independen (LAI)</strong> yang proses auditnya sendiri memerlukan waktu 4–6 minggu. Memulai 90 hari sebelumnya memberi ruang untuk revisi dokumen tanpa tekanan waktu.</p>
+      </div>
+
+      <p>Apabila berkenan, kami dapat memberikan <strong>konsultasi awal gratis</strong> untuk mengecek kelengkapan dokumen dan memberikan estimasi biaya yang transparan.</p>
+
+      <a href="https://wa.me/6285111400841" class="cta-btn cta-green">Mulai Konsultasi Gratis</a>
+      <p class="note" style="margin-top:10px;">Atau cek status SBU Anda langsung di <a href="https://lpjk.pu.go.id" style="color:#185FA5;">lpjk.pu.go.id</a></p>
+
+      <div class="footer">
+        <strong>Ibrahim</strong><br>
+        PT. Esdea Assistance Management<br>
+        0851-1140-0841 · ibrahim@esdeassistance.com<br>
+        Senin – Jumat, 08:00 – 17:00 · esdeassistance.com
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="panel-amber" class="panel">
+  <p class="section-label">Template B — 60 hari sebelum expired</p>
+  <div class="email-wrap">
+    <div class="email-meta">
+      <div><strong>Kepada:</strong> admin@karyaabadibersaudara.co.id</div>
+      <div><strong>Subjek:</strong> [PENTING] SBU PT. Karya Abadi Bersaudara Berakhir 60 Hari Lagi — Hindari Penolakan Tender</div>
+    </div>
+    <div class="email-header">
+      <span class="badge badge-amber"><i class="ti ti-clock" aria-hidden="true"></i> Mendesak — 60 hari tersisa</span>
+    </div>
+    <div class="email-body">
+      <p>Yth. Bapak/Ibu Pimpinan <span class="highlight">PT. Karya Abadi Bersaudara</span>,</p>
+      <p>Kami mengingatkan kembali bahwa <strong>Sertifikat Badan Usaha Jasa Konstruksi (SBUJK)</strong> perusahaan Bapak/Ibu akan berakhir dalam <strong>60 hari</strong>.</p>
+
+      <div class="info-card info-card-amber">
+        <div class="label">Status SBU — perlu segera ditindaklanjuti</div>
+        <div class="data-row"><span class="key">Nama perusahaan</span><span class="val">PT. Karya Abadi Bersaudara</span></div>
+        <div class="data-row"><span class="key">Kode & subklasifikasi</span><span class="val">[Kode] — [Nama Subklasifikasi]</span></div>
+        <div class="data-row"><span class="key">Kualifikasi</span><span class="val">[Kualifikasi]</span></div>
+        <div class="data-row"><span class="key">Berakhir pada</span><span class="val val-amber">[Tanggal Expired]</span></div>
+        <div class="countdown">
+          <span class="countdown-num" style="color:#854F0B;">60</span>
+          <div><div style="font-size:13px;font-weight:500;">hari tersisa</div><div class="countdown-label">Proses LAI & perpanjangan butuh 4–8 minggu</div></div>
+        </div>
+      </div>
+
+      <p>Dengan sisa waktu 60 hari, proses perpanjangan perlu <strong>segera dimulai</strong>. Keterlambatan dapat mengakibatkan SBU berakhir sebelum proses selesai, yang berpotensi menggugurkan keikutsertaan tender dan menghentikan proyek yang sedang berjalan.</p>
+
+      <div class="info-card info-card-blue">
+        <div class="label">Risiko jika SBU habis masa berlaku</div>
+        <div class="service-item si-amber" style="margin-bottom:6px; font-size:13px;"><i class="ti ti-x" style="color:#A32D2D;" aria-hidden="true"></i><span>Tidak dapat mengikuti tender pemerintah dan swasta</span></div>
+        <div class="service-item si-amber" style="margin-bottom:6px; font-size:13px;"><i class="ti ti-x" style="color:#A32D2D;" aria-hidden="true"></i><span>Kontrak berjalan dapat dihentikan atau tidak dapat diperpanjang</span></div>
+        <div class="service-item si-amber" style="margin-bottom:6px; font-size:13px;"><i class="ti ti-x" style="color:#A32D2D;" aria-hidden="true"></i><span>Proses reaktivasi lebih panjang dan berbiaya lebih tinggi</span></div>
+      </div>
+
+      <div class="services si-amber">
+        <div class="title">Paket layanan kami untuk kasus 60 hari:</div>
+        <div class="service-item"><i class="ti ti-certificate" aria-hidden="true"></i><span><strong>Fast-track perpanjangan SBUJK</strong> dengan pendampingan penuh dokumen LPJK</span></div>
+        <div class="service-item"><i class="ti ti-file-invoice" aria-hidden="true"></i><span><strong>Laporan Audit Independen (LAI)</strong> — kami koordinasikan dengan auditor rekanan kami untuk efisiensi waktu</span></div>
+        <div class="service-item"><i class="ti ti-users" aria-hidden="true"></i><span><strong>SKK Konstruksi</strong> — validasi tenaga ahli yang diperlukan untuk subklasifikasi [Kode Subklasifikasi]</span></div>
+      </div>
+
+      <a href="https://wa.me/6285111400841" class="cta-btn cta-amber">Konsultasi Sekarang — Waktu Terbatas</a>
+
+      <div class="footer">
+        <strong>Ibrahim</strong><br>
+        PT. Esdea Assistance Management<br>
+        0851-1140-0841 · ibrahim@esdeassistance.com<br>
+        Senin – Jumat, 08:00 – 17:00 · esdeassistance.com
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="panel-red" class="panel">
+  <p class="section-label">Template C — 30 hari sebelum expired</p>
+  <div class="email-wrap">
+    <div class="email-meta">
+      <div><strong>Kepada:</strong> admin@karyaabadibersaudara.co.id</div>
+      <div><strong>Subjek:</strong> [MENDESAK] SBU Berakhir [Tanggal Expired] — Tindakan Diperlukan Sebelum [Tanggal-7]</div>
+    </div>
+    <div class="email-header">
+      <span class="badge badge-red"><i class="ti ti-alert-triangle" aria-hidden="true"></i> Kritis — 30 hari tersisa</span>
+    </div>
+    <div class="email-body">
+      <p>Yth. Bapak/Ibu Pimpinan <span class="highlight">PT. Karya Abadi Bersaudara</span>,</p>
+      <p>Kami menghubungi Bapak/Ibu karena <strong>SBUJK perusahaan akan berakhir pada [Tanggal Expired]</strong> — kurang dari 30 hari dari sekarang.</p>
+
+      <div class="info-card info-card-red">
+        <div class="label">Status SBU — kritis</div>
+        <div class="data-row"><span class="key">Nama perusahaan</span><span class="val">PT. Karya Abadi Bersaudara</span></div>
+        <div class="data-row"><span class="key">Subklasifikasi</span><span class="val">[Kode] — [Nama Subklasifikasi]</span></div>
+        <div class="data-row"><span class="key">Kualifikasi</span><span class="val">[Kualifikasi]</span></div>
+        <div class="data-row"><span class="key">Berakhir pada</span><span class="val val-red">[Tanggal Expired]</span></div>
+        <div class="countdown">
+          <span class="countdown-num" style="color:#A32D2D;">30</span>
+          <div><div style="font-size:13px;font-weight:500;color:#A32D2D;">hari tersisa</div><div class="countdown-label">Batas aman pengajuan: [Tanggal Expired - 7 hari]</div></div>
+        </div>
+      </div>
+
+      <p>Pada tahap ini, proses perpanjangan harus <strong>dimulai hari ini</strong> agar dapat selesai sebelum masa berlaku habis. Kami memiliki pengalaman menangani kasus dengan tenggat waktu ketat dan siap membantu secara intensif.</p>
+
+      <div class="info-card info-card-red">
+        <div class="label">Apa yang terjadi jika melewati tanggal expired?</div>
+        <p style="font-size:13px; color: var(--color-text-primary); margin:0;">SBU yang telah berakhir berstatus <strong>tidak aktif</strong> di sistem LPJK. Perusahaan tidak dapat mengikuti tender, dan proses reaktivasi membutuhkan waktu lebih lama serta biaya administrasi tambahan dibanding perpanjangan normal.</p>
+      </div>
+
+      <div class="services si-red">
+        <div class="title">Yang perlu segera disiapkan (kami bantu semua):</div>
+        <div class="service-item"><i class="ti ti-circle-1" aria-hidden="true"></i><span><strong>Laporan Audit Independen (LAI)</strong> — dokumen wajib, kami koordinasikan dengan auditor rekanan</span></div>
+        <div class="service-item"><i class="ti ti-circle-2" aria-hidden="true"></i><span><strong>Dokumen perusahaan</strong> — akta, NIB, NPWP, dan dokumen pendukung lainnya</span></div>
+        <div class="service-item"><i class="ti ti-circle-3" aria-hidden="true"></i><span><strong>Data tenaga ahli (SKK)</strong> — validasi LPJK untuk subklasifikasi [Kode Subklasifikasi]</span></div>
+        <div class="service-item"><i class="ti ti-circle-4" aria-hidden="true"></i><span><strong>Pengajuan ke LPJK</strong> — kami dampingi hingga terbit</span></div>
+      </div>
+
+      <p style="font-weight:500;">Hubungi kami <strong>hari ini</strong> untuk konsultasi darurat dan penjadwalan proses.</p>
+
+      <a href="https://wa.me/6285111400841" class="cta-btn cta-red">Hubungi Sekarang — Proses Hari Ini</a>
+
+      <div class="footer">
+        <strong>Ibrahim</strong><br>
+        PT. Esdea Assistance Management<br>
+        <strong>0851-1140-0841</strong> (WhatsApp tersedia) · ibrahim@esdeassistance.com<br>
+        Senin – Jumat, 08:00 – 17:00 · esdeassistance.com
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+function showPanel(color, btn, ramp) {
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t => { t.className = 'tab'; });
+  document.getElementById('panel-' + color).classList.add('active');
+  btn.className = 'tab active-' + ramp;
+}
+</script>
